@@ -2,11 +2,15 @@
 // A CSS RESET FROM: https://piccalil.li/blog/a-modern-css-reset
 // ============================================================
 
-/* Box sizing rules */
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  box-sizing: inherit;
   padding: 0;
   margin: 0;
 }
