@@ -10,20 +10,18 @@ const uglify = require("gulp-uglify");
 const babel = require("gulp-babel");
 const del = require("del");
 const browserSync = require("browser-sync").create();
+const imageMin = require("gulp-imagemin");
+const pngquant = require("imagemin-pngquant");
+const mozjpeg = require("imagemin-mozjpeg");
 
 const origin = "src";
 const destination = "build";
-
-// const files = {
-//   scssPath: "src/scss/**/*.scss",
-//   jsPath: "src/js/**/*.js",
-// };
 
 // cleans/deletes the destination folder
 async function clean() {
   return await del(destination);
 }
-// exports.clean = clean;
+exports.clean = clean;
 
 // moves html
 function html() {
@@ -59,8 +57,16 @@ function js() {
     .pipe(sourcemaps.write("./maps"))
     .pipe(dest(`${destination}/js`));
 }
-
 // exports.js = js;
+
+function images() {
+  return src(`${origin}/images/*`)
+    .pipe(
+      imageMin([pngquant({ quality: [0.7, 0.7] }), mozjpeg({ quality: 70 })])
+    )
+    .pipe(dest(`${destination}/images`));
+}
+// exports.images = images;
 
 // cachebusting
 const cbString = new Date().getTime();
@@ -77,11 +83,12 @@ function watcher(cb) {
   // a series of tasks css, html, js and then browserSync.reload
   watch(`${origin}/**/*.html`).on("change", series(html, browserSync.reload));
   watch(`${origin}/**/*.scss`).on("change", series(scss, browserSync.reload));
+  watch(`${origin}/images/*`).on("change", series(images, browserSync.reload));
   watch(`${origin}/**/*.js`).on("change", series(js, browserSync.reload));
   cb();
 }
 
-exports.watcher = watcher;
+// exports.watcher = watcher;
 
 function server() {
   return browserSync.init({
@@ -99,9 +106,7 @@ function server() {
 // exports.server = server;
 exports.default = series(
   clean,
-  parallel(html, scss, js),
+  parallel(html, scss, images, js),
   cacheBust,
   parallel(server, watcher)
-  //   server,
-  //   watcher
 );
