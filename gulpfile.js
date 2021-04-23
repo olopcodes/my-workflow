@@ -71,12 +71,12 @@ function images() {
 // exports.images = images;
 
 // cachebusting
-const cbString = new Date().getTime();
-function cacheBust() {
-  return src(`${origin}/**/*.html`)
-    .pipe(replace(/cb=\d+/g, "cb=" + cbString))
-    .pipe(dest(destination));
-}
+// const cbString = new Date().getTime();
+// function cacheBust() {
+//   return src(`${origin}/**/*.html`)
+//     .pipe(replace(/cb=\d+/g, "cb=" + cbString))
+//     .pipe(dest(destination));
+// }
 
 // exports.cacheBustTask = cacheBustTask;
 
@@ -109,6 +109,6 @@ function server() {
 exports.default = series(
   clean,
   parallel(html, scss, images, js),
-  cacheBust,
+  // cacheBust,
   parallel(server, watcher)
 );
