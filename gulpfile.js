@@ -43,19 +43,21 @@ function scss() {
 
 //  js
 function js() {
-  return src(`${origin}/js/**/*.js`)
-    .pipe(sourcemaps.init())
-    .pipe(sourcemaps.identityMap())
-    .pipe(
-      babel({
-        compact: false,
-        presets: ["@babel/env"],
-      })
-    )
-    .pipe(concat("bundle.js"))
-    .pipe(uglify())
-    .pipe(sourcemaps.write("./maps"))
-    .pipe(dest(`${destination}/js`));
+  return (
+    src(`${origin}/js/**/*.js`)
+      .pipe(sourcemaps.init())
+      .pipe(sourcemaps.identityMap())
+      .pipe(
+        babel({
+          compact: false,
+          presets: ["@babel/env"],
+        })
+      )
+      // .pipe(concat("bundle.js"))
+      .pipe(uglify())
+      .pipe(sourcemaps.write("./maps"))
+      .pipe(dest(`${destination}/js`))
+  );
 }
 // exports.js = js;
 
